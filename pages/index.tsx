@@ -60,6 +60,7 @@ export default function Chat(props: { apiKeyApp: string }) {
   );
   const handleTranslate = async () => {
     const apiKey = apiKeyApp;
+
     setInputOnSubmit(inputCode);
 
     // Chat post conditions(maximum number of characters, valid message etc.)
@@ -165,7 +166,7 @@ export default function Chat(props: { apiKeyApp: string }) {
       <Img
         src={Bg.src}
         position={'absolute'}
-        w="350px"
+        w="0px"
         left="50%"
         top="50%"
         transform={'translate(-50%, -50%)'}
@@ -177,7 +178,6 @@ export default function Chat(props: { apiKeyApp: string }) {
         minH={{ base: '75vh', '2xl': '85vh' }}
         maxW="1000px"
       >
-        {/* Model Change */}
         <Flex direction={'column'} w="100%" mb={outputCode ? '20px' : 'auto'}>
           <Flex
             mx="auto"
@@ -186,7 +186,7 @@ export default function Chat(props: { apiKeyApp: string }) {
             mb="20px"
             borderRadius="60px"
           >
-            <Flex
+            {/* <Flex
               cursor={'pointer'}
               transition="0.3s"
               justify={'center'}
@@ -218,8 +218,8 @@ export default function Chat(props: { apiKeyApp: string }) {
                 />
               </Flex>
               GPT-3.5
-            </Flex>
-            <Flex
+            </Flex> */}
+            {/* <Flex
               cursor={'pointer'}
               transition="0.3s"
               justify={'center'}
@@ -251,10 +251,10 @@ export default function Chat(props: { apiKeyApp: string }) {
                 />
               </Flex>
               GPT-4
-            </Flex>
+            </Flex> */}
           </Flex>
 
-          <Accordion color={gray} allowToggle w="100%" my="0px" mx="auto">
+          {/* <Accordion color={gray} allowToggle w="100%" my="0px" mx="auto">
             <AccordionItem border="none">
               <AccordionButton
                 borderBottom="0px solid"
@@ -281,7 +281,7 @@ export default function Chat(props: { apiKeyApp: string }) {
                 </Text>
               </AccordionPanel>
             </AccordionItem>
-          </Accordion>
+          </Accordion> */}
         </Flex>
         {/* Main Box */}
         <Flex
@@ -392,8 +392,7 @@ export default function Chat(props: { apiKeyApp: string }) {
             _hover={{
               boxShadow:
                 '0px 21px 27px -10px rgba(96, 60, 255, 0.48) !important',
-              bg:
-                'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
+              bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%) !important',
               _disabled: {
                 bg: 'linear-gradient(15.46deg, #4A25E1 26.3%, #7B5AFF 86.4%)',
               },
@@ -401,7 +400,7 @@ export default function Chat(props: { apiKeyApp: string }) {
             onClick={handleTranslate}
             isLoading={loading ? true : false}
           >
-            Submit
+            Ask
           </Button>
         </Flex>
 

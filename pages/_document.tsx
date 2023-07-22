@@ -5,7 +5,7 @@ export default function Document() {
   return (
     <Html lang="en">
       <Head>
-        <title>Horizon AI Template Free</title>
+        <title>Question Answering System</title>
       </Head>
       <body suppressHydrationWarning={true}>
         <Main />

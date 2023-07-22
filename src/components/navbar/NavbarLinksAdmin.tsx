@@ -96,7 +96,7 @@ export default function HeaderLinks(props: {
           maxW={{ base: '360px', md: 'unset' }}
         >
           {/* <Flex bgImage={navImage} borderRadius="16px" mb="28px" alt="" /> */}
-          <Flex flexDirection="column">
+          {/* <Flex flexDirection="column">
             <Link
               isExternal
               w="100%"
@@ -156,7 +156,7 @@ export default function HeaderLinks(props: {
                 Try Free Version
               </Button>
             </Link>
-          </Flex>
+          </Flex> */}
         </MenuList>
       </Menu>
 
