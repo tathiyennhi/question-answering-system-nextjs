@@ -25,6 +25,7 @@ import NavLink from '@/components/link/NavLink';
 import { IRoute } from '@/types/navigation';
 import { PropsWithChildren, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
+import UploadButton from './UploadButton';
 
 interface SidebarLinksProps extends PropsWithChildren {
   routes: IRoute[];
@@ -365,7 +366,8 @@ export function SidebarLinks(props: SidebarLinksProps) {
     });
   };
   //  BRAND
-  return <>{createLinks(routes)}</>;
+  // return <>{(createLinks(routes), (<UploadButton />))}</>;
+  return <>{(<UploadButton />)}</>;
 }
 
 export default SidebarLinks;
