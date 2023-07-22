@@ -5,3 +5,9 @@ export interface ChatBody {
   model: OpenAIModel;
   apiKey?: string | undefined;
 }
+
+export interface QuestionPayload {
+  inputCode: string;
+  model: OpenAIModel;
+  apiKey?: string | undefined;
+}
