@@ -9,19 +9,14 @@ import {
   ModalBody,
   ModalCloseButton,
   Icon,
+  useToast,
 } from '@chakra-ui/react';
-import {
-  MdFileCopy,
-  MdFileUpload,
-  MdHome,
-  MdLock,
-  MdLayers,
-  MdAutoAwesome,
-  MdOutlineManageAccounts,
-} from 'react-icons/md';
+import { MdFileUpload } from 'react-icons/md';
 
 const UploadButton: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const toast = useToast(); // Khởi tạo useToast
 
   const handleUploadClick = () => {
     setIsModalOpen(true);
@@ -30,9 +25,48 @@ const UploadButton: React.FC = () => {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      // Do something with the file, e.g., upload it to the server
-      console.log('Selected file:', file.name);
-      setIsModalOpen(false);
+      setSelectedFile(file);
+    }
+  };
+
+  const handleUploadFile = async () => {
+    setIsModalOpen(false);
+
+    if (selectedFile) {
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      try {
+        const response = await fetch('http://127.0.0.1:5000/upload-file', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (response.ok) {
+          const data = await response.json(); // Parse dữ liệu trả về thành JSON
+          toast({
+            title: 'File uploaded successfully.',
+            description: `File path: ${data.file_path}`, // Hiển thị đường dẫn file đã upload từ server
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          });
+        } else {
+          toast({
+            title: 'Error uploading file. Please try again.',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      } catch (error) {
+        toast({
+          title: 'An error occurred. Please try again later.',
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -73,7 +107,9 @@ const UploadButton: React.FC = () => {
             >
               Cancel
             </Button>
-            <Button colorScheme="green">Upload</Button>
+            <Button colorScheme="green" onClick={handleUploadFile}>
+              Upload
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
