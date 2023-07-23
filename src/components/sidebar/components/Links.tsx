@@ -1,6 +1,5 @@
 'use client';
 /* eslint-disable */
-
 // chakra imports
 import {
   Accordion,
@@ -42,7 +41,6 @@ export function SidebarLinks(props: SidebarLinksProps) {
   let gray = useColorModeValue('gray.500', 'gray.500');
 
   const { routes } = props;
-
   // verifies if routeName is the one active (in browser input)
   const activeRoute = useCallback(
     (routeName: string) => {

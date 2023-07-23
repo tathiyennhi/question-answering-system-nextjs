@@ -7,7 +7,7 @@ export interface ChatBody {
 }
 
 export interface QuestionPayload {
-  inputCode: string;
-  model: OpenAIModel;
+  question: string;
+  file_path: string;
   apiKey?: string | undefined;
 }
