@@ -1,6 +1,5 @@
 'use client';
 /* eslint-disable */
-
 // chakra imports
 import {
   Accordion,
@@ -25,6 +24,7 @@ import NavLink from '@/components/link/NavLink';
 import { IRoute } from '@/types/navigation';
 import { PropsWithChildren, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
+import UploadButton from './UploadButton';
 
 interface SidebarLinksProps extends PropsWithChildren {
   routes: IRoute[];
@@ -41,7 +41,6 @@ export function SidebarLinks(props: SidebarLinksProps) {
   let gray = useColorModeValue('gray.500', 'gray.500');
 
   const { routes } = props;
-
   // verifies if routeName is the one active (in browser input)
   const activeRoute = useCallback(
     (routeName: string) => {
@@ -365,7 +364,8 @@ export function SidebarLinks(props: SidebarLinksProps) {
     });
   };
   //  BRAND
-  return <>{createLinks(routes)}</>;
+  // return <>{(createLinks(routes), (<UploadButton />))}</>;
+  return <>{(<UploadButton />)}</>;
 }
 
 export default SidebarLinks;

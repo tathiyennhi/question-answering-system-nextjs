@@ -13,4 +13,5 @@ export interface IRoute {
   rightElement?: boolean;
   invisible?: boolean;
   disabled?: boolean;
+  onClick?: void;
 }

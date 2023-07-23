@@ -1,22 +1,28 @@
 'use client';
 /*eslint-disable*/
-
+//for calling open-ai api directly, change file name to index.tsx 
 import Link from '@/components/link/Link';
 import MessageBoxChat from '@/components/MessageBox';
 import { ChatBody, OpenAIModel } from '@/types/types';
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
+  Box,
   Button,
   Flex,
   Icon,
+  Image,
   Img,
   Input,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-import { useState } from 'react';
-import { MdAutoAwesome, MdEdit, MdPerson } from 'react-icons/md';
+import { useEffect, useState } from 'react';
+import { MdAutoAwesome, MdBolt, MdEdit, MdPerson } from 'react-icons/md';
 import Bg from '../public/img/chat/bg-image.png';
-import axios from 'axios';
 
 export default function Chat(props: { apiKeyApp: string }) {
   // *** If you use .env.local variable for your API key, method which we recommend, use the apiKey variable commented below
@@ -76,28 +82,80 @@ export default function Chat(props: { apiKeyApp: string }) {
       );
       return;
     }
-
+    setOutputCode(' ');
     setLoading(true);
-    try {
-      const response = await axios.post('http://127.0.0.1:5000/process', {
-        question: inputCode,
-        file_path: 'uploads/phuhung.txt',
-        api_key: localStorage.getItem('apiKey'),
-      });
+    const controller = new AbortController();
+    const body: ChatBody = {
+      inputCode,
+      model,
+      apiKey,
+    };
 
-      const { answer } = response.data;
-      // alert(answer);
-      setOutputCode(answer);
-      setInputCode('');
+    // -------------- Fetch --------------
+    const response = await fetch('/api/chatAPI', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      signal: controller.signal,
+      body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
       setLoading(false);
-    } catch (error) {
-      alert(error);
-      console.error(error);
+      if (response) {
+        alert(
+          'Something went wrong went fetching from the API. Make sure to use a valid API key.',
+        );
+      }
+      return;
     }
+
+    const data = response.body;
+
+    if (!data) {
+      setLoading(false);
+      alert('Something went wrong');
+      return;
+    }
+
+    const reader = data.getReader();
+    const decoder = new TextDecoder();
+    let done = false;
+
+    while (!done) {
+      setLoading(true);
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      const chunkValue = decoder.decode(value);
+      setOutputCode((prevCode) => prevCode + chunkValue);
+    }
+
+    setLoading(false);
   };
+  // -------------- Copy Response --------------
+  // const copyToClipboard = (text: string) => {
+  //   const el = document.createElement('textarea');
+  //   el.value = text;
+  //   document.body.appendChild(el);
+  //   el.select();
+  //   document.execCommand('copy');
+  //   document.body.removeChild(el);
+  // };
+
+  // *** Initializing apiKey with .env.local value
+  // useEffect(() => {
+  // ENV file verison
+  // const apiKeyENV = process.env.NEXT_PUBLIC_OPENAI_API_KEY
+  // if (apiKey === undefined || null) {
+  //   setApiKey(apiKeyENV)
+  // }
+  // }, [])
+
   const handleChange = (Event: any) => {
     setInputCode(Event.target.value);
   };
+
   return (
     <Flex
       w="100%"
@@ -127,7 +185,103 @@ export default function Chat(props: { apiKeyApp: string }) {
             w="max-content"
             mb="20px"
             borderRadius="60px"
-          ></Flex>
+          >
+            {/* <Flex
+              cursor={'pointer'}
+              transition="0.3s"
+              justify={'center'}
+              align="center"
+              bg={model === 'gpt-3.5-turbo' ? buttonBg : 'transparent'}
+              w="174px"
+              h="70px"
+              boxShadow={model === 'gpt-3.5-turbo' ? buttonShadow : 'none'}
+              borderRadius="14px"
+              color={textColor}
+              fontSize="18px"
+              fontWeight={'700'}
+              onClick={() => setModel('gpt-3.5-turbo')}
+            >
+              <Flex
+                borderRadius="full"
+                justify="center"
+                align="center"
+                bg={bgIcon}
+                me="10px"
+                h="39px"
+                w="39px"
+              >
+                <Icon
+                  as={MdAutoAwesome}
+                  width="20px"
+                  height="20px"
+                  color={iconColor}
+                />
+              </Flex>
+              GPT-3.5
+            </Flex> */}
+            {/* <Flex
+              cursor={'pointer'}
+              transition="0.3s"
+              justify={'center'}
+              align="center"
+              bg={model === 'gpt-4' ? buttonBg : 'transparent'}
+              w="164px"
+              h="70px"
+              boxShadow={model === 'gpt-4' ? buttonShadow : 'none'}
+              borderRadius="14px"
+              color={textColor}
+              fontSize="18px"
+              fontWeight={'700'}
+              onClick={() => setModel('gpt-4')}
+            >
+              <Flex
+                borderRadius="full"
+                justify="center"
+                align="center"
+                bg={bgIcon}
+                me="10px"
+                h="39px"
+                w="39px"
+              >
+                <Icon
+                  as={MdBolt}
+                  width="20px"
+                  height="20px"
+                  color={iconColor}
+                />
+              </Flex>
+              GPT-4
+            </Flex> */}
+          </Flex>
+
+          {/* <Accordion color={gray} allowToggle w="100%" my="0px" mx="auto">
+            <AccordionItem border="none">
+              <AccordionButton
+                borderBottom="0px solid"
+                maxW="max-content"
+                mx="auto"
+                _hover={{ border: '0px solid', bg: 'none' }}
+                _focus={{ border: '0px solid', bg: 'none' }}
+              >
+                <Box flex="1" textAlign="left">
+                  <Text color={gray} fontWeight="500" fontSize="sm">
+                    No plugins added
+                  </Text>
+                </Box>
+                <AccordionIcon color={gray} />
+              </AccordionButton>
+              <AccordionPanel mx="auto" w="max-content" p="0px 0px 10px 0px">
+                <Text
+                  color={gray}
+                  fontWeight="500"
+                  fontSize="sm"
+                  textAlign={'center'}
+                >
+                  This is a cool text example.
+                </Text>
+              </AccordionPanel>
+            </AccordionItem>
+          </Accordion> */}
         </Flex>
         {/* Main Box */}
         <Flex

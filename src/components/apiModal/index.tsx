@@ -27,6 +27,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdLock } from 'react-icons/md';
+import axios from 'axios';
 
 function APIModal(props: { setApiKey: any; sidebar?: boolean }) {
   const { setApiKey, sidebar } = props;
@@ -44,11 +45,26 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean }) {
   const handleChange = (Event: any) => {
     setInputCode(Event.target.value);
   };
-
   const handleApiKeyChange = (value: string) => {
     setApiKey(value);
-
     localStorage.setItem('apiKey', value);
+    axios.post('/api/setApi-key.API', { apiKey: value }).then((response) => {
+      if (response.status === 200) {
+        toast({
+          title: 'Success! You have successfully added your API key!',
+          position: 'top',
+          status: 'success',
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: 'API key not found',
+          position: 'top',
+          status: 'error',
+          isClosable: true,
+        });
+      }
+    });
   };
   return (
     <>
