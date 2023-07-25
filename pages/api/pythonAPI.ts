@@ -7,7 +7,8 @@ export const config = {
 
 const handler = async (req: Request): Promise<Response> => {
   try {
-    const { inputCode, model, apiKey } = (await req.json()) as QuestionPayload;
+    const { question, file_path, apiKey } =
+      (await req.json()) as QuestionPayload;
     let apiKeyFinal;
 
     if (apiKey) {
@@ -21,8 +22,8 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     const response = await axios.post('/api/process', {
-      question: inputCode,
-      file: model,
+      question: question,
+      file: file_path,
       apiKey: apiKeyFinal,
     });
 
