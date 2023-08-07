@@ -11,24 +11,24 @@ import Bg from '../public/img/chat/bg-image.png';
 import axios from 'axios';
 import Head from 'next/head';
 
-const BoxItem = memo(({ question, answer }: { question: string; answer: string; }) => {
+const BoxItem = memo(({ question, answer }: { question: string; answer: string }) => {
     const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
     const brandColor = useColorModeValue('brand.500', 'white');
     const gray = useColorModeValue('gray.500', 'white');
     const textColor = useColorModeValue('navy.700', 'white');
 
-    const isDisplay = (question && question !== '') && (answer && answer !== '');
+    const isDisplay = question && question !== '' && answer && answer !== '';
     console.log('BoxItem', question, answer);
 
     return (
         <Flex
-            className='box-item'
+            className="box-item"
             direction="column"
             w="100%"
             mx="auto"
             display={isDisplay ? 'flex' : 'none'}
             mb="50px"
-        // mb={'auto'}
+            // mb={'auto'}
         >
             {/* Question */}
             <Flex w="100%" align={'center'} mb="10px">
@@ -80,7 +80,7 @@ const BoxItem = memo(({ question, answer }: { question: string; answer: string; 
     );
 });
 
-export default function Chat(props: { apiKeyApp: string; }) {
+export default function Chat(props: { apiKeyApp: string }) {
     // *** If you use .env.local variable for your API key, method which we recommend, use the apiKey variable commented below
     const { apiKeyApp } = props;
     // Input States
@@ -189,14 +189,6 @@ export default function Chat(props: { apiKeyApp: string; }) {
     const handleTranslate = async () => {
         const apiKey = apiKeyApp;
 
-        // setInputOnSubmit(inputCode);
-        handleSetData({
-            question: inputCode
-        });
-
-        // Chat post conditions(maximum number of characters, valid message etc.)
-        const maxCodeLength = model === 'gpt-3.5-turbo' ? 700 : 700;
-
         if (!apiKeyApp?.includes('sk-') && !apiKey?.includes('sk-')) {
             alert('Please enter an API key.');
             return;
@@ -207,6 +199,7 @@ export default function Chat(props: { apiKeyApp: string; }) {
             return;
         }
 
+        const maxCodeLength = model === 'gpt-3.5-turbo' ? 700 : 700;
         if (inputCode.length > maxCodeLength) {
             alert(
                 `Please enter code less than ${maxCodeLength} characters. You are currently at ${inputCode.length} characters.`
@@ -219,17 +212,16 @@ export default function Chat(props: { apiKeyApp: string; }) {
         try {
             const response = await axios.post(`${process.env.API_URL}/process`, {
                 question: inputCode,
-                file_path: 'uploads/phuhung.txt',
                 api_key: localStorage.getItem('apiKey')
             });
 
             const { answer } = response.data;
-            // Update the answer for the question in the data array
+
+            // Handle setting data here
             handleSetData({
                 question: inputCode,
                 answer
             });
-            // setOutputCode(answer);
 
             setInputCode(''); // clear input question
             setLoading(false);
@@ -259,7 +251,14 @@ export default function Chat(props: { apiKeyApp: string; }) {
                 <title>Question Answering System</title>
             </Head>
             <Flex w="100%" pt={{ base: '70px', md: '0px' }} direction="column" position="relative">
-                <Img src={Bg.src} position={'absolute'} w="0px" left="50%" top="50%" transform={'translate(-50%, -50%)'} />
+                <Img
+                    src={Bg.src}
+                    position={'absolute'}
+                    w="0px"
+                    left="50%"
+                    top="50%"
+                    transform={'translate(-50%, -50%)'}
+                />
                 <Flex
                     direction="column"
                     mx="auto"
@@ -319,16 +318,19 @@ export default function Chat(props: { apiKeyApp: string; }) {
                         Ask
                     </Button> */}
                         <Tooltip label="Send a message">
-                            <Button py="20px"
+                            <Button
+                                py="20px"
                                 fontSize="sm"
                                 ms="auto"
-                                _hover={{ backgroundColor: "transparent", boxShadow: "none" }}
-                                _active={{ backgroundColor: "transparent", boxShadow: "none" }}
-                                h="54px" onClick={handleTranslate} disabled={loading ? true : false}>
+                                _hover={{ backgroundColor: 'transparent', boxShadow: 'none' }}
+                                _active={{ backgroundColor: 'transparent', boxShadow: 'none' }}
+                                h="54px"
+                                onClick={handleTranslate}
+                                disabled={loading ? true : false}
+                            >
                                 <Icon as={MdSend} width="20px" height="20px" color={brandColor} />
                             </Button>
                         </Tooltip>
-
                     </Flex>
 
                     <Flex justify="center" mt="20px" direction={{ base: 'column', md: 'row' }} alignItems="center">
@@ -345,6 +347,5 @@ export default function Chat(props: { apiKeyApp: string; }) {
                 </Flex>
             </Flex>
         </>
-
     );
 }
