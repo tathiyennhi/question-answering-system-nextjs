@@ -188,6 +188,9 @@ export default function Chat(props: { apiKeyApp: string }) {
 
     const handleTranslate = async () => {
         const apiKey = apiKeyApp;
+        await axios.post(`http://127.0.0.1:9797/api-key`, {
+            apiKey: apiKey,
+        });
 
         if (!apiKeyApp?.includes('sk-') && !apiKey?.includes('sk-')) {
             alert('Please enter an API key.');
@@ -210,7 +213,8 @@ export default function Chat(props: { apiKeyApp: string }) {
         setLoading(true);
 
         try {
-            const response = await axios.post(`${process.env.API_URL}/process`, {
+            // const response = await axios.post(`${process.env.API_URL}/process`, {
+            const response = await axios.post(`http://127.0.0.1:9797/process`, {
                 question: inputCode,
                 api_key: localStorage.getItem('apiKey')
             });
