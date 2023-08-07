@@ -23,14 +23,14 @@ import {
     Text,
     useColorModeValue,
     useDisclosure,
-    useToast,
+    useToast
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import { MdLock } from 'react-icons/md';
 import axios from 'axios';
 
-function APIModal(props: { setApiKey: any; sidebar?: boolean; }) {
-    const localStorageApiKey = typeof window !== 'undefined' ? localStorage.getItem('apiKey') : null
+function APIModal(props: { setApiKey: any; sidebar?: boolean }) {
+    const localStorageApiKey = typeof window !== 'undefined' ? localStorage.getItem('apiKey') : null;
 
     const { setApiKey, sidebar } = props;
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -51,20 +51,21 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean; }) {
     const handleApiKeyChange = (value: string) => {
         setApiKey(value);
         localStorage.setItem('apiKey', value);
-        axios.post(`/api/setApi-key.API`, { apiKey: value }).then((response) => { // '/api-key'
+        axios.post(`http://127.0.0.1:9797/api-key`, { apiKey: value }).then((response) => {
+            // '/api-key'
             if (response.status === 200) {
                 toast({
                     title: 'Success! You have successfully added your API key!',
                     position: 'top',
                     status: 'success',
-                    isClosable: true,
+                    isClosable: true
                 });
             } else {
                 toast({
                     title: 'API key not found',
                     position: 'top',
                     status: 'error',
-                    isClosable: true,
+                    isClosable: true
                 });
             }
         });
@@ -114,16 +115,9 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean; }) {
                         </ModalHeader>
                         <ModalCloseButton _focus={{ boxShadow: 'none' }} />
                         <ModalBody p="0px">
-                            <Text
-                                color={grayColor}
-                                fontWeight="500"
-                                fontSize="md"
-                                lineHeight="28px"
-                                mb="22px"
-                            >
-                                You need an OpenAI API Key to use Horizon AI Template's
-                                features. Your API Key is stored locally on your browser and
-                                never sent anywhere else.
+                            <Text color={grayColor} fontWeight="500" fontSize="md" lineHeight="28px" mb="22px">
+                                You need an OpenAI API Key to use Horizon AI Template's features. Your API Key is stored
+                                locally on your browser and never sent anywhere else.
                             </Text>
                             <Flex mb="20px">
                                 <Input
@@ -153,25 +147,23 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean; }) {
                                     w={{ base: '300px', md: '180px' }}
                                     h="54px"
                                     onClick={() => {
-                                        inputCode?.includes('sk-')
-                                            ? handleApiKeyChange(inputCode)
-                                            : null;
+                                        inputCode?.includes('sk-') ? handleApiKeyChange(inputCode) : null;
                                         if (inputCode)
                                             toast({
                                                 title: inputCode?.includes('sk-')
                                                     ? `Success! You have successfully added your API key!`
                                                     : !inputCode?.includes('sk-')
-                                                        ? `Invalid API key. Please make sure your API key is still working properly.`
-                                                        : 'Please add your API key!',
+                                                    ? `Invalid API key. Please make sure your API key is still working properly.`
+                                                    : 'Please add your API key!',
                                                 position: 'top',
                                                 status: inputCode?.includes('sk-')
                                                     ? 'success'
                                                     : !inputCode?.includes('sk-')
-                                                        ? `error`
-                                                        : !inputCode
-                                                            ? 'warning'
-                                                            : 'error',
-                                                isClosable: true,
+                                                    ? `error`
+                                                    : !inputCode
+                                                    ? 'warning'
+                                                    : 'error',
+                                                isClosable: true
                                             });
                                     }}
                                 >
@@ -197,11 +189,7 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean; }) {
                                         _focus={{ border: '0px solid', bg: 'none' }}
                                     >
                                         <Box flex="1" textAlign="left">
-                                            <Text
-                                                color={textColor}
-                                                fontWeight="700"
-                                                fontSize={{ sm: 'md', lg: 'md' }}
-                                            >
+                                            <Text color={textColor} fontWeight="700" fontSize={{ sm: 'md', lg: 'md' }}>
                                                 Your API Key is not working?
                                             </Text>
                                         </Box>
@@ -209,12 +197,7 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean; }) {
                                     </AccordionButton>
                                     <AccordionPanel p="18px 0px 10px 0px">
                                         <UnorderedList p="5px">
-                                            <ListItem
-                                                mb="26px"
-                                                color={grayColor}
-                                                fontSize=",d"
-                                                fontWeight="500"
-                                            >
+                                            <ListItem mb="26px" color={grayColor} fontSize=",d" fontWeight="500">
                                                 Make sure you have an{' '}
                                                 <Link
                                                     textDecoration="underline"
@@ -225,8 +208,7 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean; }) {
                                                 >
                                                     OpenAI account
                                                 </Link>{' '}
-                                                and a valid API key to use ChatGPT. We don't sell API
-                                                keys.
+                                                and a valid API key to use ChatGPT. We don't sell API keys.
                                             </ListItem>
                                             <ListItem
                                                 color={grayColor}
@@ -251,15 +233,8 @@ function APIModal(props: { setApiKey: any; sidebar?: boolean; }) {
                                     </AccordionPanel>
                                 </AccordionItem>
                             </Accordion>
-                            <Text
-                                color={grayColor}
-                                fontWeight="500"
-                                fontSize="sm"
-                                mb="42px"
-                                mx="30px"
-                            >
-                                *The app will connect to OpenAI API server to check if your API
-                                Key is working properly.
+                            <Text color={grayColor} fontWeight="500" fontSize="sm" mb="42px" mx="30px">
+                                *The app will connect to OpenAI API server to check if your API Key is working properly.
                             </Text>
                         </ModalBody>
                     </Card>

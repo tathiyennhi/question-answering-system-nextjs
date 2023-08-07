@@ -188,9 +188,6 @@ export default function Chat(props: { apiKeyApp: string }) {
 
     const handleTranslate = async () => {
         const apiKey = apiKeyApp;
-        await axios.post(`http://127.0.0.1:9797/api-key`, {
-            apiKey: apiKey,
-        });
 
         if (!apiKeyApp?.includes('sk-') && !apiKey?.includes('sk-')) {
             alert('Please enter an API key.');
